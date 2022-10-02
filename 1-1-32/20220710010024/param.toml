@@ -1,0 +1,58 @@
+# ファイルやディレクトリに関する設定
+[resource]
+# ログの出力先
+logging_file = "log/log.txt"
+# 前処理の結果の保存先
+# 既に保存されていれば読み込んで使う
+processed_data_file = "processed/data.joblib"
+# モデルの保存先
+# 日時を含めれば結果の管理が楽になる
+model_dir = "results/20220710010024/"
+# 学習結果やロスの保存先
+results_dir = "results/20220710010024/"
+
+[dataset]
+# CSVの読み出しに関するデータセットの種類の指定
+data_type = "CIDDS-001"
+# CSVファイル
+raw_data_file = "data/raw/CIDDS-001/traffic/OpenStack/CIDDS-001-internal-week1.csv"
+# 読み込む行数(設定しなければ全て読み込む)
+# nrows = 5
+
+[preprocess]
+# 前処理のリスト
+preprocess_methods = [
+  "remove_external_ip",
+  "manual_clustering"
+]
+# サブサンプリングの閾値(データのサイズにもよるが，1e-5程度)
+# 1なら何もしないのと同じ
+subsampling_rate = 1e-5
+# 学習データに使用する属性値の最小出現数
+min_count = 5
+# 読み込むデータの指定
+# 指定した内容に応じて学習データが生成される
+train_data_format = "ring2019flow"
+
+# 学習パラメータ
+[optimizer]
+# 最適化アルゴリズム
+algorithm = "Adam"
+# ネガティブサンプリングのサンプル数(2~20程度)
+nega_size = 8
+# ctrl-c で学習を中断しても結果は保存されるので，大きめの値にしてロスを見ながら調整すれば良い
+max_epoch = 1
+# バッチサイズ(16~256程度，2の累乗がそれっぽい)
+batch_size = 32
+# 学習率(0.1~0.000001程度)
+learning_rate = 0.01
+
+[model]
+# 埋め込みの次数(20~200程度)
+emb_dimension = 50
+
+# Early sampling に関する設定
+[early_stopping]
+# 有効にしない
+is_enabled = false
+
