@@ -14,7 +14,7 @@ class EncoderGRU(nn.Module):
 
     def forward(self, x, h):
         out, h = self.gru(x, h)
-        out = self.fc(self.relu(out[;,-1]))
+        out = self.fc(self.relu(out[:,-1]))
         return out, h
 
     def init_hidden(self, batch_size):
