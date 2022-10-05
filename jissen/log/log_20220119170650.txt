@@ -1,0 +1,106 @@
+2022-01-19 17:06:50.091 - common_resource - INFO - Parameters text:
+[common]
+	[common.dataset]
+	# CSVの読み出しに関するデータセットの種類の指定
+	data_type = "CIDDS-001"
+	# CSVファイル
+	raw_data_file = "./shortened_data/CIDDS-001-internal-week1-day1.csv"
+	# 読み込む行数(設定しなければ全て読み込む)
+	# nrows = 5
+
+[ip2vec]
+	# ファイルやディレクトリに関する設定
+	[ip2vec.resource]
+	# ログの出力先
+	logging_file = "../log/log_20220119170650.txt"
+	# 前処理の結果の保存先
+	# 既に保存されていれば読み込んで使う
+	processed_data_dir = "../data/processed/"
+	# モデルの保存先
+	# 日時を含めれば結果の管理が楽になる
+	model_dir = "../results/CIDDS-001/"
+	# 学習結果やロスの保存先
+	results_dir = "../results/CIDDS-001/"
+
+	[ip2vec.preprocess]
+	# 前処理のリスト
+	preprocess_methods = [
+	#  "remove_external_ip",
+	#  "manual_clustering"
+	]
+	# サブサンプリングの閾値(データのサイズにもよるが，1e-5程度)
+	# 1なら何もしないのと同じ
+	subsampling_rate = 1e-5
+	# 学習データに使用する属性値の最小出現数
+	min_count = 5
+	# 読み込むデータの指定
+	# 指定した内容に応じて学習データが生成される
+	train_data_format = "ring2019flow"
+
+	# 学習パラメータ
+	[ip2vec.optimizer]
+	# 最適化アルゴリズム
+	algorithm = "Adam"
+	# ネガティブサンプリングのサンプル数(2~20程度)
+	nega_size = 8
+	# ctrl-c で学習を中断しても結果は保存されるので，大きめの値にしてロスを見ながら調整すれば良い
+	max_epoch = 1 
+	# バッチサイズ(16~256程度，2の累乗がそれっぽい)
+	batch_size = 32
+	# 学習率(0.1~0.000001程度)
+	learning_rate = 0.01
+
+	[ip2vec.model]
+	# 埋め込みの次数(20~200程度)
+	emb_dimension = 20
+
+	# Early sampling に関する設定
+	[ip2vec.early_stopping]
+	# 有効にしない
+	is_enabled = false
+
+2022-01-19 17:06:50.091 - common_resource - INFO - Parameters:
+{'common': {'dataset': {'data_type': 'CIDDS-001', 'raw_data_file': './shortened_data/CIDDS-001-internal-week1-day1.csv'}}, 'ip2vec': {'resource': {'logging_file': '../log/log_20220119170650.txt', 'processed_data_dir': '../data/processed/', 'model_dir': '../results/CIDDS-001/', 'results_dir': '../results/CIDDS-001/'}, 'preprocess': {'preprocess_methods': [], 'subsampling_rate': 1e-05, 'min_count': 5, 'train_data_format': 'ring2019flow'}, 'optimizer': {'algorithm': 'Adam', 'nega_size': 8, 'max_epoch': 1, 'batch_size': 32, 'learning_rate': 0.01}, 'model': {'emb_dimension': 20}, 'early_stopping': {'is_enabled': False}}}
+2022-01-19 17:06:50.091 - common_datasets - INFO - Load ./shortened_data/CIDDS-001-internal-week1-day1.csv
+2022-01-19 17:06:54.908 - common_datasets - INFO - Columns:
+        ['Date first seen', 'Duration', 'Transport protocol', 'Source IP address', 'Source port', 'Destination IP address', 'Destination port', 'Number of transmitted packets', 'Number of transmitted bytes', 'TCP flags']
+2022-01-19 17:06:54.909 - ip2vec_data_processor - INFO - Init
+2022-01-19 17:06:54.938 - ip2vec_trainer - INFO - Device type: cuda
+2022-01-19 17:06:54.938 - ip2vec_trainer - INFO - Train
+2022-01-19 17:06:54.938 - ip2vec_trainer - INFO - Load preprocessed data
+2022-01-19 17:06:54.938 - ip2vec_data_processor - INFO - Preprocess, subsampling_rate=1e-05, min_count=5
+2022-01-19 17:06:54.938 - ip2vec_data_processor - INFO - Generate
+2022-01-19 17:06:55.139 - ip2vec_data_processor - INFO - Dataset size is 12006784
+2022-01-19 17:06:55.140 - ip2vec_data_processor - INFO - Make vocabulary
+2022-01-19 17:06:56.105 - ip2vec_data_processor - INFO - Make word2idx and idx2word
+2022-01-19 17:06:56.158 - ip2vec_data_processor - INFO - Word2Idx[Duration] size is 5525
+2022-01-19 17:06:56.160 - ip2vec_data_processor - INFO - Word2Idx[IP address] size is 4670
+2022-01-19 17:06:56.172 - ip2vec_data_processor - INFO - Word2Idx[Number of transmitted bytes] size is 33997
+2022-01-19 17:06:56.172 - ip2vec_data_processor - INFO - Word2Idx[Number of transmitted packets] size is 1876
+2022-01-19 17:06:56.183 - ip2vec_data_processor - INFO - Word2Idx[Port] size is 33429
+2022-01-19 17:06:56.183 - ip2vec_data_processor - INFO - Word2Idx[Transport protocol] size is 3
+2022-01-19 17:06:56.183 - ip2vec_data_processor - INFO - Make idx_counts
+2022-01-19 17:06:56.682 - ip2vec_data_processor - INFO - Make train_data
+2022-01-19 17:06:56.682 - ip2vec_data_processor - INFO - Sample attribute pairs:
+[['Source IP address', 'Destination IP address'], ['Source IP address', 'Source port'], ['Source IP address', 'Transport protocol'], ['Destination IP address', 'Source IP address'], ['Destination IP address', 'Destination port'], ['Destination IP address', 'Transport protocol'], ['Source port', 'Source IP address'], ['Destination port', 'Destination IP address'], ['Number of transmitted bytes', 'Number of transmitted packets'], ['Number of transmitted bytes', 'Duration'], ['Number of transmitted packets', 'Number of transmitted bytes'], ['Number of transmitted packets', 'Duration'], ['Duration', 'Number of transmitted packets']]
+2022-01-19 17:06:56.682 - ip2vec_data_processor - INFO - Subsampling of Frequent Words
+2022-01-19 17:06:56.703 - ip2vec_data_processor - INFO - Discard 31864 elements
+2022-01-19 17:08:17.368 - ip2vec_data_processor - INFO - train_data size is 397909
+2022-01-19 17:08:17.423 - ip2vec_data_processor - INFO - Dump ../data/processed
+2022-01-19 17:08:22.064 - ip2vec_trainer - INFO - Preprocessed data is loaded
+2022-01-19 17:08:22.064 - ip2vec_trainer - INFO - Embedding size 79500
+2022-01-19 17:08:22.064 - ip2vec_trainer - INFO - Make model
+2022-01-19 17:08:22.064 - ip2vec_model - INFO - Init (79500, 20)
+2022-01-19 17:08:23.975 - ip2vec_trainer - INFO - Split dataset
+2022-01-19 17:08:23.993 - ip2vec_trainer - INFO - Train size is 318327
+2022-01-19 17:08:23.993 - ip2vec_trainer - INFO - Validation size is 79582
+2022-01-19 17:08:23.993 - ip2vec_trainer - INFO - Make TensorDataset
+2022-01-19 17:08:24.239 - ip2vec_trainer - INFO - Train dataset size is 318327
+2022-01-19 17:08:24.239 - ip2vec_trainer - INFO - Validation dataset size is 79582
+2022-01-19 17:08:24.260 - ip2vec_trainer - INFO - Fitting
+2022-01-19 18:34:48.181 - ip2vec_trainer - INFO - Loss 27.94612530210577
+2022-01-19 18:56:16.926 - ip2vec_trainer - INFO - Validation Loss 23.399930580869274
+2022-01-19 18:56:23.919 - ip2vec_trainer - INFO - Save ../results/CIDDS-001/model-0.pt
+2022-01-19 18:56:33.582 - ip2vec_trainer - INFO - Save ../results/CIDDS-001/hidden-vector-0.joblib
+2022-01-19 18:56:40.387 - ip2vec_trainer - INFO - Save ../results/CIDDS-001/model.pt
+2022-01-19 18:56:50.016 - ip2vec_trainer - INFO - Save ../results/CIDDS-001/hidden-vector.joblib
