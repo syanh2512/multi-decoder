@@ -1,4 +1,6 @@
 import joblib
+import torch
 
-hidden_vector = joblib.load("1-1-32/20220710010024/hidden-vector.joblib")
-print(hidden_vector.type())
+with torch.no_grad():
+    hidden_vector_dict = joblib.load("jissen/results/CIDDS-001/hidden-vector.joblib")
+    print(hidden_vector_dict)
