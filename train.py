@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import joblib
+from data_processor import Preprocessor
 from model import EncoderGRU
 
 
@@ -9,6 +10,19 @@ if torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
+
+class SampleGenerator():
+    def __init__(self, train_data, hidden_vector_dict, word2idx):
+        self.data = train_data
+        self.processor = Preprocessor(hidden_vector_dict, word2idx)
+
+    def load_dataset(self):
+        self.hidden_vector_dict = joblib.load('jissen/results/CIDDS-001/hidden-vector.joblib') 
+        self.word2idx = joblib.load('jissen/data/processed/word2idx')
+        self.dataset = CIDDS_001_Loader() #editing
+
+
+    def generate_sample(self, ) #editing
 
 
 hidden_vector_dict = joblib.load("jissen/results/CIDDS-001/hidden-vector.joblib") # hidden_vector_dict = joblib.load("1-1-32/20220710010024/hidden-vector.joblib")
